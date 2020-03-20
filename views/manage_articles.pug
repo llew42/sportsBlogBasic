@@ -6,12 +6,14 @@ block content
       .col-md-8
         h1 #{title}
       .col-md-4
-        a(class='btn btn-primary add-btn' href='/manage/articles/add') Add
+        a(class='btn btn-primary add-btn' href='/manage/articles/add') Add Article
+    != messages()
     table(class='table table-striped')
       tr
         th Article Title
         th Date Published
         th Author
+        th Actions
       each article, i in articles
         tr
           td #{article.title}

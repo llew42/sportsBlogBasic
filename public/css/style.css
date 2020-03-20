@@ -1,3 +1,31 @@
 .add-btn{
   margin-top: 0.5em;
 }
+#messages ul{
+  margin: 0;
+  padding: 0;
+}
+#messages li{
+  list-style: none;
+  padding: .5em;
+}
+#messages .success{
+  background: green;
+  color: #ffffff;
+  margin-bottom: 1em;
+}
+#messages .error{
+  background: red;
+  color: #ffffff;
+  margin-bottom: 1em;
+}
+.navbar{
+  margin-bottom: 0;
+  background: #000000;
+}
+.showcase{
+  background: url('/img/home-bg.jpg') no-repeat;
+  min-height: 50vh;
+  color: #ffffff;
+  border-radius: 0;
+}

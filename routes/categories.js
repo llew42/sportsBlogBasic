@@ -82,6 +82,7 @@ router.post('/edit/:id',
       if (err) {
         res.send(err);
       }
+      req.flash('success', 'Category Updated');
       res.redirect('/manage/categories');
     });
   }

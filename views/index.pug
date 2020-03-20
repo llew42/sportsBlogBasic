@@ -1,4 +1,12 @@
 extends layout
 
 block content
-  h1 #{title}
+  .jumbotron.showcase
+    .container
+      h1 #{title}
+      p.lead The best sports articles around the world!
+  .container
+    .row
+      .col-md-12
+        each article, i in articles
+          h2.post-title #{article.title}
