@@ -102,4 +102,34 @@ router.delete('/delete/:id', (req, res, next) => {
   });
 });
 
+router.post('/comments/add/:id',
+  [
+    body('comment_subject', 'Subject is required').not().isEmpty().trim(),
+    body('comment_body', 'Body is required').not().isEmpty().trim(),
+    body('comment_author', 'Author is required').not().isEmpty().trim(),
+  ],(req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    Article.getArticleById(req.params.id, (err, article) => {
+      res.render('article', {title: `${article.title}`, article: article, errors: errors});
+    });
+  }
+  else {
+    const article = new Article();
+    const query = {_id: req.params.id}
+
+    const comment = {
+      comment_subject: req.body.comment_subject,
+      comment_author: req.body.comment_author,
+      comment_body: req.body.comment_body,
+      comment_email: req.body.comment_email,
+    }
+    Article.addComment(query, comment, (err, article) => {
+      res.redirect(`/articles/show/${req.params.id}`);
+    });
+  }
+});
+
 module.exports = router;

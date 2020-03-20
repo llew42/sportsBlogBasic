@@ -73,3 +73,14 @@ module.exports.editArticle = (query, edit, callback) => {
 module.exports.deleteArticle = (query, callback) => {
   Article.remove(query, callback);
 }
+
+module.exports.addComment = (query, comment, callback) => {
+  Article.update(query,
+    {
+      $push: {
+        comments: comment,
+      }
+    },
+    callback
+  );
+}
