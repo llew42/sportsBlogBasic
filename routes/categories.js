@@ -1,5 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const {
+  check,
+  body,
+  buildCheckFunction,
+  validationResult,
+  matchedData
+} = require('express-validator');
+
 Category = require('../models/category.js');
 
 // Get categories
@@ -17,31 +25,66 @@ router.get('/', (req, res, next) => {
 });
 
 // ADD CATEGORY
-router.post('/add', (req, res, next) => {
-  const category = new Category();
-  category.title = req.body.title;
-  category.description = req.body.description;
+router.post('/add',
+  [ body('title', 'Title is required').not().isEmpty().trim(),
+    body('description', 'Description is required').not().isEmpty().trim().escape()
+  ], (req, res, next) => {
 
-  Category.addCategory(category, (err, category) => {
-    if (err) {
-      res.send(err);
-    }
-    res.redirect('/manage/categories');
-  });
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    res.render('add_category', {
+      errors: errors,
+      title: 'Create New Category'
+    });
+  }
+  else {
+    const category = new Category();
+    category.title = req.body.title;
+    category.description = req.body.description;
+    Category.addCategory(category, (err, category) => {
+      if (err) {
+        res.send(err);
+      }
+      req.flash('success', 'Category Saved');
+      res.redirect('/manage/categories');
+    });
+  }
 });
 
 // EDIT CATEGORY
-router.post('/edit/:id', (req, res, next) => {
-  const category = new Category();
-  const query = {_id: req.params.id};
-  const edit = {title: req.body.title, description: req.body.description}
+router.post('/edit/:id',
+  [ body('title', 'Title is required')
+      .not().isEmpty()
+      .trim(),
+    body('description', 'Description is required')
+      .not().isEmpty()
+      .trim()
+      .escape()
+  ], (req, res, next) => {
 
-  Category.editCategory(query, edit, (err, category) => {
-    if (err) {
-      res.send(err);
-    }
-    res.redirect('/manage/categories');
-  })
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    res.render('edit_category', {
+      errors: errors,
+      title: 'Edit Category'
+    });
+  }
+  else {
+    const category = new Category();
+    const query = {_id: req.params.id};
+    const edit = {title: req.body.title, description: req.body.description}
+
+    Category.editCategory(query, edit, (err, category) => {
+      if (err) {
+        res.send(err);
+      }
+      res.redirect('/manage/categories');
+    });
+  }
 });
 
 // DELETE Category

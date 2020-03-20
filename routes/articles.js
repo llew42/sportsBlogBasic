@@ -1,7 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const {
+  check,
+  body,
+  buildCheckFunction,
+  validationResult,
+  matchedData
+} = require('express-validator');
 
-const Article = require('../models/article.js')
+Article = require('../models/article.js');
 
 router.get('/', (req, res, next) => {
   res.render('articles', {title: 'Articles'});
@@ -16,20 +23,41 @@ router.get('/category/:category_id', (req, res, next) => {
 });
 
 // Add article
-router.post('/add', (req, res, next) => {
-  const article = new Article();
-  article.title = req.body.title;
-  article.subtitle = req.body.subtitle;
-  article.category = req.body.category;
-  article.body = req.body.body;
-  article.author = req.body.author;
+router.post('/add',
+  [
+    body('title', 'Title is required').not().isEmpty().trim(),
+    body('subtitle', 'Subtitle is required').not().isEmpty().trim(),
+    body('category', 'Category is required').not().isEmpty().trim(),
+    body('author', 'Author is required').not().isEmpty().trim(),
+    body('body', 'Body is required').not().isEmpty().trim(),
+  ], (req, res, next) => {
 
-  Article.addArticle(article, (err, article) => {
-    if (err) {
-      res.send(err);
-    }
-    res.redirect('/manage/articles');
-  })
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    Category.getCategories((err, categories) => {
+      res.render('add_article', {
+        errors: errors,
+        title: 'Create Article',
+        categories: categories
+      });
+    });
+  }
+  else {
+    const article = new Article();
+    article.title = req.body.title;
+    article.subtitle = req.body.subtitle;
+    article.category = req.body.category;
+    article.body = req.body.body;
+    article.author = req.body.author;
+
+    Article.addArticle(article, (err, article) => {
+      if (err) {
+        res.send(err);
+      }
+      res.redirect('/manage/articles');
+    });
+  }
 });
 
 // Edit article
