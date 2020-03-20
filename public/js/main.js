@@ -7,22 +7,21 @@ $(document).ready(() => {
       url: `/categories/delete/${id}`,
       success: (response) => {
         alert('Category Removed');
-        window.location.href='/'
       },
       error: (error) => {
         console.log(error);
       }
     });
   });
+
   $('.article-delete').on('click', (e) => {
     $target = $(e.target);
     const id = $target.attr('data-article-id');
     $.ajax({
       type: 'DELETE',
-      url: `/article/delete/${id}`,
-      success: (response) => {
+      url: `/articles/delete/${id}`,
+      complete: (response) => {
         alert('Article Removed');
-        window.location.href='/'
       },
       error: (error) => {
         console.log(error);
