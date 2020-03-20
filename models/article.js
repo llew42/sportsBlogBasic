@@ -48,6 +48,12 @@ module.exports.getArticles = (callback, limit) => {
   Article.find(callback).limit(limit).sort([['title', 'ascending']])
 }
 
+// Get article by category
+module.exports.getCategoryArticles = (categoryId, callback) => {
+  const query = {category: categoryId}
+  Article.find(query, callback).sort([['title', 'ascending']]);
+}
+
 //Add article
 module.exports.addArticle = (article, callback) => {
   Article.create(article, callback);

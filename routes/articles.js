@@ -11,15 +11,23 @@ const {
 Article = require('../models/article.js');
 
 router.get('/', (req, res, next) => {
-  res.render('articles', {title: 'Articles'});
+  Article.getArticles((err, articles) => {
+    res.render('articles', {title: 'Articles', articles: articles});
+  });
 });
 
 router.get('/show/:id', (req, res, next) => {
-  res.render('article', {title: 'An Article'});
+  Article.getArticleById(req.params.id, (err, article) => {
+    res.render('article', {title: `${article.title} Article`, article: article});
+  });
 });
 
 router.get('/category/:category_id', (req, res, next) => {
-  res.render('articles', {title: 'Category Articles'});
+  Article.getCategoryArticles(req.params.category_id, (err, articles) => {
+    Category.getCategoryById(req.params.category_id, (err, category) => {
+      res.render('articles', {title: `${category.title} Articles`, articles: articles});
+    });
+  });
 });
 
 // Add article
