@@ -3,19 +3,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const {
-  check,
-  body,
-  cookie,
-  header,
-  param,
-  query,
-  checkSchema,
-  oneOf,
-  buildCheckFunction,
-  validationResult,
-  matchedData
-} = require('express-validator');
 
 // MONGOOSE CONNECTION
 mongoose.connect('mongodb://localhost/sportsBlog');
@@ -32,10 +19,19 @@ const manage = require('./routes/manage');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// Moment
+app.locals.moment = require('moment');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(express.static(path.join(__dirname + '/public')));
+
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.use(require('connect-flash')());
 app.use( (req, res, next) => {

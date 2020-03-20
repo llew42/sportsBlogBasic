@@ -1,69 +1,37 @@
 const mongoose = require('mongoose');
 
-const articleSchema = mongoose.Schema({
+const categorySchema = mongoose.Schema({
   title: {
     type: String
   },
-  subtitle: {
+  description: {
     type: String
-  },
-  category: {
-    type: String
-  },
-   body: {
-    type: String
-  },
-  author: {
-    type: String
-  },
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  comments: [
-    {
-      comment_subject: {
-        type: String
-      },
-      comment_body: {
-        type: String
-      },
-      comment_author: {
-        type: String
-      },
-      comment_email: {
-        type: String
-      },
-      comment_date: {
-        type: String
-      }
-    }
-  ]
+  }
 });
 
-const Article = module.exports = mongoose.model('Article', articleSchema);
+const Category = module.exports = mongoose.model('Category', categorySchema);
 
-// Get article
-module.exports.getArticles = (callback, limit) => {
-  Article.find(callback).limit(limit).sort([['title', 'ascending']])
+// Get categories
+module.exports.getCategories = (callback, limit) => {
+  Category.find(callback).limit(limit).sort([['title', 'ascending']])
 }
 
-//Add article
-module.exports.addArticle = (article, callback) => {
-  Article.create(article, callback);
+//Add category
+module.exports.addCategory = (category, callback) => {
+  Category.create(category, callback);
 }
 
-// Get single article
-module.exports.getArticleById = (id, callback) => {
-  Article.findById(id, callback);
+// Get single category
+module.exports.getCategoryById = (id, callback) => {
+  Category.findById(id, callback);
 }
 
-// Update article
-module.exports.editArticle = (query, edit, callback) => {
-  Article.findOneAndUpdate(query, edit, callback);
+// Update category
+module.exports.editCategory = (query, edit, callback) => {
+  Category.findOneAndUpdate(query, edit, callback);
 }
 
-// Delete article
-module.exports.deleteArticle = (query, callback) => {
-  Article.remove(query, callback);
+// Delete category
+module.exports.deleteCategory = (query, callback) => {
+  Category.remove(query, callback);
 }
